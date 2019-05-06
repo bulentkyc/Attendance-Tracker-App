@@ -1,0 +1,69 @@
+{{> header}}
+
+<link rel="stylesheet" href="css/index.css">
+
+<main>
+
+    <!-- input form -->
+    <div class="container">
+        <table class="table">
+
+            <td>
+                <tr>
+                    <th rowspan="5" colspan="1" style="width:35%;padding:0;">
+                        <img class="img-fluid" src="./assets/personal-photos/1.jpg" alt="There is a problem while loading photo">
+                    </th>
+                </tr>
+                <tr>
+                    <td>First Name</td>
+                    <td id="firstName">Bulent</td>
+                </tr>
+
+                <tr>
+                    <td>Last Name</td>
+                    <td id="lastName">Kayici</td>
+                </tr>
+
+                <tr>
+                    <td>Class Code</td>
+                    <td id="classCode">FBW6</td>
+                </tr>
+
+                <tr>
+                    <td>Email Address</td>
+                    <td id="email">bk@bk.com</td>
+                </tr>
+            </td>
+        </table>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Coming Time</th>
+                    <th scope="col">Leaving Time</th>
+                    <th scope="col">Staying Time</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody id="daysTable">
+                <tr>
+                    <th scope="row">01.05.2019</th>
+                    <td>
+                        <button class="w-100 btn btn-success" id="coming">Coming</button>
+                    </td>
+                    <td>
+                        <button class="w-100 btn btn-danger" id="leaving">Leaving</button>
+                    </td>
+                    <td>8:20</td>
+                    <td>OK</td>
+                </tr>
+            </tbody>
+    </div>
+</main>
+
+
+<div id="footer">
+    {{> footer}}
+</div>
+</div>

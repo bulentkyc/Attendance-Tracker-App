@@ -1,0 +1,123 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="/assets/logo/logo.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous">
+    </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous">
+    </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="d-flex align-items-center h-100">
+      <img height="50px" class="d-inline-block align-top" src="/assets/logo/logo-top-bar.png">
+      <a id='salutation' class="navbar-brand ml-3" href="/"> Please login or register</a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a id="logInOut" class="nav-link">Login/Logout </a>
+        </li>
+        <li class="nav-item">
+          <a id="reg" class="nav-link" href="/register">Register</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    {{#if success_msg}}
+    <div class="alert alert-primary" role="alert">
+      {{success_msg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {{/if}} {{#if error_msg}}
+    <div class="alert alert-danger" role="alert">
+      {{error_msg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {{/if}} {{#if error}}
+    <div class="alert alert-danger" role="alert">
+      {{error}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {{/if}}
+  </div>
+
+  <script>
+    let isRegister = 'false';
+
+    let showLogin = () => {
+      authPopup.hidden = false;
+      firstName.hidden = true;
+      lastName.hidden = true;
+      authType.innerHTML = 'Login';
+      logInOutBtn.innerHTML = 'Login';
+      logInOutBtn.href = '/login';
+      isRegister = 'false';
+    }
+
+    let logout = () => {
+      sessionStorage.isLogedin = 'false';
+      checkLogin();
+      alert(`Bye ${sessionStorage.email}. See you soon!`);
+      content.hidden = true;
+      avatar.src = '';
+      sessionStorage.avatarSrc = '';
+    }
+
+    let logInOutF = () => {
+
+      if (sessionStorage.isLogedin == 'false') {
+        showLogin();
+      } else {
+        logout();
+      }
+    }
+
+    logInOut.addEventListener('click', logInOutF);
+
+    let showRegister = () => {
+      authPopup.hidden = false;
+      firstName.hidden = false;
+      lastName.hidden = false;
+      authType.innerHTML = 'Register';
+      logInOutBtn.innerHTML = 'Register';
+      isRegister = 'true';
+    }
+
+    reg.addEventListener('click', showRegister);
+
+    let checkLogin = () => {
+      if (sessionStorage.isLogedin == 'true') {
+        logInOut.innerHTML = 'Logout';
+        salutation.innerHTML = `Hi, ${sessionStorage.email}`;
+      } else {
+        logInOut.innerHTML = 'Login';
+        salutation.innerHTML = 'Hi!';
+      }
+    }
+
+    checkLogin();
+  </script>

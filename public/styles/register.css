@@ -1,0 +1,24 @@
+.client-ico {
+    width: 200px;
+    height: 300px;
+    background-position: center, center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 0;
+}
+
+#student {
+    background-image: url('/assets/role-img/student.png');
+}
+
+#teacher {
+    background-image: url('/assets/role-img/teacher.png');
+}
+
+#manager {
+    background-image: url('/assets/role-img/manager.png');
+}
+
+#observer {
+    background-image: url('/assets/role-img/observer.png');
+}
