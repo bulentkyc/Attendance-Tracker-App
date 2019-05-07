@@ -6,10 +6,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const express = require('express');
 const exp = express();
+let jwt = require('jsonwebtoken');
+const config = require('../model/config');
 
 exp.use(express.static(__dirname + '/public'));
 
-var fileName = '';
+let fileName = '';
 //set stroge engine
 const storager = multer.diskStorage({
     destination: 'public/uploads/',
@@ -24,8 +26,80 @@ const upload = multer({
     storage: storager
 }).single('avatar');
 
-let newAttendee = (req, res) => {
 
+
+
+let checkToken = (req, res, next) => {
+    let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
+    if (token.startsWith('Bearer ')) {
+        // Remove Bearer from string
+        token = token.slice(7, token.length);
+    }
+
+    if (token) {
+        jwt.verify(token, config.secret, (err, decoded) => {
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: 'Token is not valid'
+                });
+            } else {
+                req.decoded = decoded;
+                next();
+            }
+        });
+    } else {
+        return res.json({
+            success: false,
+            message: 'Auth token is not supplied'
+        });
+    }
+};
+
+module.exports = {
+    checkToken: checkToken
+}
+
+
+/////////////
+
+
+class HandlerGenerator {
+    login(req, res) {
+        let username = req.body.username;
+        let password = req.body.password;
+        // For the given username fetch user from DB
+        let mockedUsername = 'admin';
+        let mockedPassword = 'password';
+
+        if (username && password) {
+            if (username === mockedUsername && password === mockedPassword) {
+                let token = jwt.sign({
+                        username: username
+                    },
+                    config.secret, {
+                        expiresIn: '24h' // expires in 24 hours
+                    }
+                );
+                // return the JWT token for the future API calls
+                res.json({
+                    success: true,
+                    message: 'Authentication successful!',
+                    token: token
+                });
+            } else {
+                res.send(403).json({
+                    success: false,
+                    message: 'Incorrect username or password'
+                });
+            }
+        } else {
+            res.send(400).json({
+                success: false,
+                message: 'Authentication failed! Please check the request'
+            });
+        }
+    }
 }
 
 
@@ -266,11 +340,62 @@ passport.deserializeUser(function (id, done) {
 });
 
 exports.login = (req, res) => {
-    passport.authenticate(
+
+    let username = req.body.email;
+    let password = req.body.password;
+    // For the given username fetch user from DB
+    let mockedUsername = 'admin';
+    let mockedPassword = 'password';
+
+    if (username && password) {
+        if (passport.authenticate(
+                'local',
+                function (err, user, info) {
+                    if (err) {
+                        return err;
+                    }
+                    if (!user) {
+                        return false;
+                    }
+                    req.logIn(user, function (err) {
+                        if (err) {
+                            return err;
+                        }
+                        return true;
+                    });
+                })) {
+            let token = jwt.sign({
+                    username: username
+                },
+                config.secret, {
+                    expiresIn: '24h' // expires in 24 hours
+                }
+            );
+            // return the JWT token for the future API calls
+            res.json({
+                success: true,
+                message: 'Authentication successful!',
+                token: token
+            });
+        } else {
+            res.send(403).json({
+                success: false,
+                message: 'Incorrect username or password'
+            });
+        }
+    } else {
+        res.send(400).json({
+            success: false,
+            message: 'Authentication failed! Please check the request'
+        });
+    }
+
+
+    /* passport.authenticate(
         'local', {
             successRedirect: '/',
             failureRedirect: '/login',
             failureFlash: true
         });
-    res.redirect('/');
+    res.redirect('/'); */
 };
